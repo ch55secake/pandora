@@ -1,2 +1,105 @@
 # pandora
-🌌 One node kubernetes configuration with terraformer and cillium
+
+Pandora is a deliberately small Kubernetes networking lab running k3s in a
+Colima VM on a Mac mini. Cilium is installed and managed from the laptop with
+Terraform. The Mac mini stores no Terraform state.
+
+## Prerequisites
+
+Install Nix with flakes enabled on both the laptop and the Mac mini. The
+repository's flake is the only supported source for project tooling.
+
+Configure an SSH host named `mac-mini` for the Mac mini. The default remote
+checkout is `~/pandora`; override it with `REMOTE_REPO` when necessary.
+
+Enter the development shell before running commands directly:
+
+```sh
+nix develop
+```
+
+The shell provides Colima, kubectl, Terraform, Helm, the Cilium CLI, SSH, and
+the validation tools used by this repository.
+
+## Workflows
+
+### 1. Bootstrap the host
+
+Clone or update this repository on the Mac mini, then run from the laptop:
+
+```sh
+make bootstrap
+```
+
+This starts the configured Colima profile and verifies that k3s is running.
+It does not run Terraform.
+
+### 2. Establish the SSH tunnel
+
+Run this in a dedicated laptop terminal and leave it running:
+
+```sh
+make tunnel
+```
+
+The tunnel forwards the laptop's `127.0.0.1:6443` to the Mac mini's
+`127.0.0.1:6443`.
+
+Generate the dedicated kubeconfig in another terminal:
+
+```sh
+make kubeconfig
+export KUBECONFIG="$HOME/.kube/mac-mini-k3s.yaml"
+kubectl get nodes
+```
+
+The generated kubeconfig is never merged into the default kubeconfig.
+
+### 3. Run Terraform
+
+With the tunnel still running and `KUBECONFIG` set:
+
+```sh
+make tf-init
+make plan
+make apply
+```
+
+Terraform installs Cilium, enables the initial Hubble components, and creates
+the namespace used by the test workload.
+
+### 4. Verify the cluster
+
+Run the complete base-cluster verification:
+
+```sh
+make verify
+```
+
+This checks the node, system pods, Cilium, Hubble, workload readiness, service
+routing, DNS, and the Cilium connectivity test.
+
+## Milestone 1: Base Cluster
+
+- [ ] Repository created
+- [ ] Nix development shell is reproducible
+- [ ] Colima config committed
+- [ ] Colima starts on the Mac mini
+- [ ] k3s starts without Flannel
+- [ ] Laptop reaches the Kubernetes API
+- [ ] kubectl works from the laptop
+- [ ] Terraform initializes
+- [ ] Terraform installs Cilium
+- [ ] Cilium reports healthy
+- [ ] Hubble works
+- [ ] Test workload has connectivity
+- [ ] Cilium connectivity test passes
+
+## Layout
+
+See [`docs/architecture.md`](docs/architecture.md) for the deployment model
+and [`docs/bootstrap.md`](docs/bootstrap.md) for host setup and recovery
+details.
+
+The next phases are kube-proxy replacement and eBPF experiments, LAN ingress,
+persistent storage and backups, GitOps, and monitoring.

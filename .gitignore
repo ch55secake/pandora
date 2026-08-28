@@ -1,0 +1,29 @@
+# Terraform working files and state
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+
+# Local Kubernetes credentials and generated certificates
+mac-mini-k3s.yaml
+*.kubeconfig
+kubeconfig
+*.crt
+*.key
+*.pem
+
+# Nix and local development artifacts
+.direnv/
+result
+result-*
+
+# Operating-system and editor files
+.DS_Store
+*.swp
+*.swo
+*~
