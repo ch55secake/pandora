@@ -37,7 +37,11 @@ umask 077
 temp_file="$(mktemp "${TMPDIR:-/tmp}/pandora-kubeconfig.XXXXXX")"
 trap 'rm -f "$temp_file"' EXIT
 
-printf -v remote_repo_arg '%q' "$REMOTE_REPO"
+case "$REMOTE_REPO" in
+~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#~/}" ;;
+\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
+*) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
+esac
 printf -v profile_arg '%q' "$PROFILE"
 ssh_command="cd $remote_repo_arg && nix develop --command colima ssh --profile $profile_arg -- sudo cat /etc/rancher/k3s/k3s.yaml"
 # The command is intentionally assembled for evaluation by the remote shell.
