@@ -12,7 +12,7 @@ permissions:
 
 jobs:
   validate:
-    name: Validate Terraform
+    name: validate-terraform
     runs-on: ubuntu-latest
 
     defaults:
