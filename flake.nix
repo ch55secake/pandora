@@ -1,7 +1,7 @@
 {
   description = "Pandora single-node k3s and Cilium homelab";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-26.05-darwin";
 
   outputs = {
     self,
@@ -29,6 +29,7 @@
           bashInteractive
           cilium-cli
           colima
+          hubble
           kubernetes-helm
           jq
           kubectl
