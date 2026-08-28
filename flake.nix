@@ -15,7 +15,11 @@
     forEachSystem = function:
       nixpkgs.lib.genAttrs systems (system:
         function {
-          pkgs = import nixpkgs {inherit system;};
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfreePredicate = package:
+              builtins.elem (nixpkgs.lib.getName package) ["terraform"];
+          };
         });
   in {
     devShells = forEachSystem ({pkgs}: {
@@ -25,7 +29,7 @@
           bashInteractive
           cilium-cli
           colima
-          helm
+          kubernetes-helm
           jq
           kubectl
           openssh

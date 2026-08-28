@@ -1,0 +1,13 @@
+cpu: 6
+memory: 8
+disk: 100
+runtime: containerd
+
+kubernetes:
+  enabled: true
+  version: v1.35.7+k3s1
+  port: 6443
+  k3sArgs:
+    - --flannel-backend=none
+    - --disable-network-policy
+    - --disable=traefik
