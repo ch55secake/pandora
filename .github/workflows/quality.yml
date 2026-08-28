@@ -1,4 +1,4 @@
-name: Quality
+name: ci
 
 on:
   pull_request:
@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   shellcheck:
-    name: ShellCheck
+    name: shellcheck
     runs-on: ubuntu-latest
 
     steps:
@@ -30,7 +30,7 @@ jobs:
         run: git ls-files -z '*.sh' | xargs -0 shellcheck
 
   nix:
-    name: Nix Flake Check
+    name: nix-flake-check
     runs-on: ubuntu-latest
 
     steps:
