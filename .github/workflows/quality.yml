@@ -21,14 +21,13 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install Nix
-        uses: DeterminateSystems/nix-installer-action@main
-
-      - name: Enable Nix cache
-        uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Install ShellCheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install --no-install-recommends -y shellcheck
 
       - name: Check shell scripts
-        run: git ls-files -z '*.sh' | xargs -0 nix develop --command shellcheck
+        run: git ls-files -z '*.sh' | xargs -0 shellcheck
 
   nix:
     name: Nix Flake Check
