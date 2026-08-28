@@ -1,26 +1,8 @@
-## Summary
+## Description 
 
-<!-- Describe the change and why it is needed. -->
+<!-- Describe the change and why it is needed --> 
 
-## Scope
+## Changes in this pull request 
 
-<!-- List the workflows, hosts, or cluster resources affected. -->
+<!-- Quick bullet pointed list of the changes included in the pull request --> 
 
-## Validation
-
-- [ ] `nix flake check`
-- [ ] `terraform fmt -check -recursive`
-- [ ] `terraform validate`
-- [ ] Live cluster verification completed, if applicable
-- [ ] Validation not run, with an explanation below
-
-## Operational Impact
-
-<!-- Describe changes to the Mac mini, Colima, k3s, Terraform state, or cluster resources. -->
-
-## Checklist
-
-- [ ] No Terraform state, kubeconfigs, credentials, or secrets are included
-- [ ] `.terraform.lock.hcl` is committed when provider dependencies change
-- [ ] Documentation reflects the new workflow or behavior
-- [ ] The change stays within the intended milestone scope
