@@ -79,6 +79,17 @@ make verify
 This checks the node, system pods, Cilium, Hubble, workload readiness, service
 routing, DNS, and the Cilium connectivity test.
 
+After the baseline is healthy, apply the optional policy experiment:
+
+```sh
+kubectl apply -f kubernetes/test-app/network-policy.yaml
+hubble observe -P --namespace pandora-test --last 20
+```
+
+The policy allows HTTP traffic from labeled test clients and denies other
+ingress to the test workload. Remove it with `kubectl delete -f` when the
+experiment is complete.
+
 ## Milestone 1: Base Cluster
 
 - [ ] Repository created

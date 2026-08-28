@@ -1,0 +1,20 @@
+apiVersion: cilium.io/v2
+kind: CiliumNetworkPolicy
+metadata:
+  name: http-echo-ingress
+  namespace: pandora-test
+  labels:
+    app.kubernetes.io/part-of: pandora
+spec:
+  endpointSelector:
+    matchLabels:
+      k8s:app.kubernetes.io/name: http-echo
+  ingress:
+    - fromEndpoints:
+        - matchLabels:
+            k8s:io.kubernetes.pod.namespace: pandora-test
+            k8s:app.kubernetes.io/name: network-client
+      toPorts:
+        - ports:
+            - port: "80"
+              protocol: TCP

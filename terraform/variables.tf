@@ -7,7 +7,7 @@ variable "kubeconfig_path" {
 variable "cilium_version" {
   description = "Cilium Helm chart version."
   type        = string
-  default     = "1.20.1"
+  default     = "1.19.7"
 }
 
 variable "pod_cidr" {
