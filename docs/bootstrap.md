@@ -46,7 +46,7 @@ cluster as part of normal troubleshooting; inspect the current state first:
 
 ```sh
 ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima status'
-ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima kubernetes status'
+ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima list'
 ```
 
 If the API is unavailable from the laptop, confirm that the tunnel is running
