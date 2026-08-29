@@ -27,3 +27,6 @@ result-*
 *.swp
 *.swo
 *~
+
+# IDEA Folder
+.idea
