@@ -12,7 +12,7 @@ readonly CONFIG_TARGET="$COLIMA_HOME_DIR/$PROFILE/colima.yaml"
 require_command() {
 	if ! command -v "$1" >/dev/null 2>&1; then
 		printf 'required command not found: %s\n' "$1" >&2
-		printf 'run this script through: nix develop --command ./host/start-colima.sh\n' >&2
+		printf 'run this script through: ./scripts/with-tools.sh ./host/start-colima.sh\n' >&2
 		exit 1
 	fi
 }

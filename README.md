@@ -6,20 +6,29 @@ Terraform. The Mac mini stores no Terraform state.
 
 ## Prerequisites
 
-Install Nix with flakes enabled on both the laptop and the Mac mini. The
-repository's flake is the only supported source for project tooling.
+Install Nix with flakes enabled on the laptop when possible. Homebrew is the
+supported fallback for hosts that do not have Nix, including the Mac mini.
+The repository's flake remains the preferred source for project tooling.
 
 Configure an SSH host named `mac-mini` for the Mac mini. The default remote
 checkout is `~/pandora`; override it with `REMOTE_REPO` when necessary.
 
-Enter the development shell before running commands directly:
+Enter the Nix development shell before running commands directly:
 
 ```sh
 nix develop
 ```
 
 The shell provides Colima, kubectl, Terraform, Helm, the Cilium CLI, SSH, and
-the validation tools used by this repository.
+the validation tools used by this repository. Make targets automatically use
+the Nix shell when available and otherwise install the tracked `Brewfile`
+dependencies through Homebrew.
+
+To prepare a Homebrew-only machine manually:
+
+```sh
+brew bundle --file=Brewfile
+```
 
 ## Workflows
 
@@ -32,7 +41,8 @@ make bootstrap
 ```
 
 This starts the configured Colima profile and verifies that k3s is running.
-It does not run Terraform.
+It does not run Terraform. If Nix is unavailable on the Mac mini, the target
+uses Homebrew and the tracked `Brewfile` automatically.
 
 ### 2. Establish the SSH tunnel
 
