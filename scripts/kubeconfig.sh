@@ -46,7 +46,7 @@ printf -v profile_arg '%q' "$PROFILE"
 ssh_command="cd $remote_repo_arg && nix develop --command colima ssh --profile $profile_arg -- sudo cat /etc/rancher/k3s/k3s.yaml"
 # The command is intentionally assembled for evaluation by the remote shell.
 # shellcheck disable=SC2029
-ssh "$REMOTE_HOST" "$ssh_command" >"$temp_file"
+ssh -o IgnoreUnknown=UseKeychain "$REMOTE_HOST" "$ssh_command" >"$temp_file"
 
 sed \
 	-e "s#^[[:space:]]*server:.*#    server: https://127.0.0.1:${LOCAL_PORT}#" \

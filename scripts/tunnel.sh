@@ -20,6 +20,7 @@ printf 'leave this process running while using kubectl or Terraform\n'
 exec ssh \
 	-o BatchMode=yes \
 	-o ExitOnForwardFailure=yes \
+	-o IgnoreUnknown=UseKeychain \
 	-o ServerAliveInterval=30 \
 	-o ServerAliveCountMax=3 \
 	-N \
