@@ -51,3 +51,16 @@ ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima list'
 
 If the API is unavailable from the laptop, confirm that the tunnel is running
 and that the generated kubeconfig points to `https://127.0.0.1:6443`.
+
+## Full teardown
+
+Run the teardown from the laptop while the SSH tunnel is still running:
+
+```sh
+make teardown
+```
+
+After confirmation, the target destroys Terraform-managed resources, deletes
+the remote Colima profile with its data, and removes the generated local
+kubeconfig. Stop the tunnel with `Ctrl-C` after the command completes. The
+teardown aborts before deleting Colima if Terraform destruction fails.

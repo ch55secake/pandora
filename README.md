@@ -100,6 +100,21 @@ The policy allows HTTP traffic from labeled test clients and denies other
 ingress to the test workload. Remove it with `kubectl delete -f` when the
 experiment is complete.
 
+### 5. Tear down Pandora
+
+The full teardown requires the SSH tunnel and generated kubeconfig to remain
+available while Terraform destroys the Kubernetes resources:
+
+```sh
+make teardown
+```
+
+After Terraform completes, the target deletes the remote Colima profile and all
+its data, then removes the generated local kubeconfig. Stop the SSH tunnel with
+`Ctrl-C` after the target finishes. Use
+`./scripts/with-tools.sh ./scripts/teardown.sh --yes` instead of
+`make teardown` when an explicit confirmation prompt is not suitable.
+
 ## Milestone 1: Base Cluster
 
 - [ ] Repository created
