@@ -11,7 +11,7 @@ supported fallback for hosts that do not have Nix, including the Mac mini.
 The repository's flake remains the preferred source for project tooling.
 
 Configure an SSH host named `mac-mini` for the Mac mini. The default remote
-checkout is `~/pandora`; override it with `REMOTE_REPO` when necessary.
+checkout is `~/Projects/pandora`; override it with `REMOTE_REPO` when necessary.
 
 Enter the Nix development shell before running commands directly:
 
