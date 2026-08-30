@@ -2,9 +2,8 @@ name: ci
 
 on:
   pull_request:
-    paths:
-      - ".github/workflows/terraform.yml"
-      - "terraform/**"
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:

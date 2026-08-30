@@ -8,6 +8,17 @@ REPO_ROOT="$(cd -- "$SCRIPT_DIR/.." && pwd)"
 readonly REPO_ROOT
 readonly BREWFILE="$REPO_ROOT/Brewfile"
 
+# Non-interactive SSH sessions do not usually load Homebrew's shell setup.
+if ! command -v brew >/dev/null 2>&1; then
+	for brew_bin in /opt/homebrew/bin /usr/local/bin; do
+		if [[ -x "$brew_bin/brew" ]]; then
+			PATH="$brew_bin:$PATH"
+			export PATH
+			break
+		fi
+	done
+fi
+
 if [[ "$#" -eq 0 ]]; then
 	printf 'usage: %s command [argument ...]\n' "$0" >&2
 	exit 2

@@ -1,7 +1,7 @@
 SHELL := /bin/bash
 
 REMOTE_HOST ?= mac-mini
-REMOTE_REPO ?= ~/pandora
+REMOTE_REPO ?= ~/Projects/pandora
 KUBECONFIG ?= $(HOME)/.kube/mac-mini-k3s.yaml
 
 TOOLS = ./scripts/with-tools.sh
