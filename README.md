@@ -1,8 +1,8 @@
 # pandora
 
 Pandora is a deliberately small Kubernetes networking lab running k3s in a
-Colima VM on a Mac mini. Cilium is installed and managed from the laptop with
-Terraform. The Mac mini stores no Terraform state.
+bridged Colima VM on a Mac mini. Cilium is installed and managed from the
+laptop with Terraform. The Mac mini stores no Terraform state.
 
 ## Prerequisites
 
@@ -11,7 +11,7 @@ supported fallback for hosts that do not have Nix, including the Mac mini.
 The repository's flake remains the preferred source for project tooling.
 
 Configure an SSH host named `mac-mini` for the Mac mini. The default remote
-checkout is `~/pandora`; override it with `REMOTE_REPO` when necessary.
+checkout is `~/Projects/pandora`; override it with `REMOTE_REPO` when necessary.
 
 Enter the Nix development shell before running commands directly:
 
@@ -44,18 +44,11 @@ This starts the configured Colima profile and verifies that k3s is running.
 It does not run Terraform. If Nix is unavailable on the Mac mini, the target
 uses Homebrew and the tracked `Brewfile` automatically.
 
-### 2. Establish the SSH tunnel
+### 2. Configure LAN access
 
-Run this in a dedicated laptop terminal and leave it running:
-
-```sh
-make tunnel
-```
-
-The tunnel forwards the laptop's `127.0.0.1:6443` to the Mac mini's
-`127.0.0.1:6443`.
-
-Generate the dedicated kubeconfig in another terminal:
+Colima uses bridged networking and assigns the VM a LAN-reachable address. The
+dedicated kubeconfig discovers that address over SSH and points directly to the
+Kubernetes API:
 
 ```sh
 make kubeconfig
@@ -64,10 +57,12 @@ kubectl get nodes
 ```
 
 The generated kubeconfig is never merged into the default kubeconfig.
+Keep port `6443` restricted to the trusted LAN; do not expose it through the
+router or firewall to the internet.
 
 ### 3. Run Terraform
 
-With the tunnel still running and `KUBECONFIG` set:
+With `KUBECONFIG` set:
 
 ```sh
 make tf-init
