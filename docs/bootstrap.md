@@ -32,7 +32,9 @@ mini user's `sudo` password; `make bootstrap` allocates a terminal for it.
 The committed profile uses the Mac mini's active Wi-Fi interface, `en1`; change
 `network.interface` in `host/colima.yaml` if the host uses another interface.
 The ingress configuration also disables k3s' bundled kube-proxy for Cilium's
-kube-proxy replacement. Stop and start an existing Colima profile after this
+kube-proxy replacement. Terraform derives Cilium's Kubernetes API host from the
+node's LAN `InternalIP`, because the Kubernetes service IP is not reachable
+until Cilium is running. Stop and start an existing Colima profile after this
 configuration changes:
 
 ```sh
