@@ -42,7 +42,7 @@ temp_file="$(mktemp "${TMPDIR:-/tmp}/pandora-kubeconfig.XXXXXX")"
 trap 'rm -f "$temp_file"' EXIT
 
 case "$REMOTE_REPO" in
-~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#~/}" ;;
+\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
 \$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
 *) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
 esac
