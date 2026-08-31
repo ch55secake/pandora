@@ -25,11 +25,16 @@ LAN address; SSH is used only for bootstrap and kubeconfig discovery.
 - The Colima VM uses bridged networking and receives a LAN-reachable IPv4
   address.
 - The Kubernetes API is available at the VM's LAN address on port `6443`.
-- Network controls must keep port `6443` on the trusted LAN and off the WAN.
+- Cilium Ingress publishes the selected HTTP services at the VM's LAN address
+  on port `80`.
+- Network controls must keep ports `80` and `6443` on the trusted LAN and off
+  the WAN.
+- Cilium provides the kube-proxy replacement required by its ingress
+  controller; k3s' bundled kube-proxy is disabled.
 - Cilium replaces the disabled Flannel CNI.
 - Hubble provides the first network-flow observability experiment.
 
 ## Initial boundaries
 
-The first milestone intentionally excludes ingress, certificates, GitOps,
-monitoring, storage, and application services beyond the test workload.
+The first milestone intentionally excludes certificates, GitOps, storage, and
+application services beyond the test workload.

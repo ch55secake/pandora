@@ -63,6 +63,13 @@ resource "helm_release" "grafana" {
       type = "ClusterIP"
     }
 
+    "grafana.ini" = {
+      server = {
+        domain   = "grafana.pandora"
+        root_url = "http://grafana.pandora/"
+      }
+    }
+
     datasources = {
       "datasources.yaml" = {
         apiVersion = 1

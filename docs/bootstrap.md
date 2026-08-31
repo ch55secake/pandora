@@ -31,6 +31,14 @@ and waits for the k3s API. The first bridged-network start may request the Mac
 mini user's `sudo` password; `make bootstrap` allocates a terminal for it.
 The committed profile uses the Mac mini's active Wi-Fi interface, `en1`; change
 `network.interface` in `host/colima.yaml` if the host uses another interface.
+The ingress configuration also disables k3s' bundled kube-proxy for Cilium's
+kube-proxy replacement. Stop and start an existing Colima profile after this
+configuration changes:
+
+```sh
+ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima stop'
+make bootstrap
+```
 
 If the host is not reachable, check the SSH alias first:
 
