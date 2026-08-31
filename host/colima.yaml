@@ -3,6 +3,11 @@ memory: 8
 disk: 100
 runtime: containerd
 
+network:
+  address: true
+  mode: bridged
+  interface: en0
+
 kubernetes:
   enabled: true
   version: v1.35.7+k3s1

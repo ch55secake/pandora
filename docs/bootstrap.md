@@ -10,7 +10,7 @@
 
 - macOS with hardware virtualization available
 - Nix with flakes enabled, or Homebrew
-- An SSH-accessible checkout at `~/pandora`
+- An SSH-accessible checkout at `~/Projects/pandora`
 
 The repository's Nix development shell supplies all project commands. When Nix
 is unavailable, `scripts/with-tools.sh` installs and uses the tracked
@@ -45,16 +45,17 @@ already-running Colima profile require an explicit restart. Do not reset the
 cluster as part of normal troubleshooting; inspect the current state first:
 
 ```sh
-ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima status'
-ssh mac-mini 'cd ~/pandora && ./scripts/with-tools.sh colima list'
+ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima status'
+ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima list'
 ```
 
-If the API is unavailable from the laptop, confirm that the tunnel is running
-and that the generated kubeconfig points to `https://127.0.0.1:6443`.
+If the API is unavailable from the laptop, confirm that Colima is running and
+that the generated kubeconfig points to the VM's LAN address on port `6443`.
 
 ## Full teardown
 
-Run the teardown from the laptop while the SSH tunnel is still running:
+Run the teardown from the laptop while Colima is running and reachable on the
+LAN:
 
 ```sh
 make teardown
@@ -62,5 +63,5 @@ make teardown
 
 After confirmation, the target destroys Terraform-managed resources, deletes
 the remote Colima profile with its data, and removes the generated local
-kubeconfig. Stop the tunnel with `Ctrl-C` after the command completes. The
-teardown aborts before deleting Colima if Terraform destruction fails.
+kubeconfig. The teardown aborts before deleting Colima if Terraform
+destruction fails.

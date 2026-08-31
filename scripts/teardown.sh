@@ -61,7 +61,7 @@ require_command ssh
 
 if [[ ! -f "$KUBECONFIG_PATH" ]]; then
 	printf 'kubeconfig not found: %s\n' "$KUBECONFIG_PATH" >&2
-	printf 'run make kubeconfig while the tunnel is available, then retry\n' >&2
+	printf 'run make kubeconfig while Colima is reachable on the LAN, then retry\n' >&2
 	exit 1
 fi
 
@@ -77,7 +77,7 @@ This permanently tears down Pandora:
 - The remote Colima profile '$PROFILE' and all its data
 - The local kubeconfig '$KUBECONFIG_PATH'
 
-The SSH tunnel must remain running until Terraform destruction finishes.
+The Kubernetes API must remain reachable on the LAN until Terraform destruction finishes.
 EOF
 	printf "Type 'destroy' to continue: "
 	IFS= read -r confirmation || {
@@ -110,4 +110,4 @@ ssh -o BatchMode=yes -o IgnoreUnknown=UseKeychain "$REMOTE_HOST" "$remote_comman
 
 rm -f -- "$KUBECONFIG_PATH"
 printf 'removed local kubeconfig: %s\n' "$KUBECONFIG_PATH"
-printf '%s\n' 'Pandora teardown complete; stop the SSH tunnel with Ctrl-C'
+printf '%s\n' 'Pandora teardown complete'
