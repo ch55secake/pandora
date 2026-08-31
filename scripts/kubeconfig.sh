@@ -56,7 +56,7 @@ server_address="$(printf '%s\n' "$colima_listing" | jq -Rr 'fromjson? | .address
 case "$server_address" in
 *[!0-9.]* | '')
 	printf 'could not determine a LAN address for Colima profile %s\n' "$PROFILE" >&2
-	printf 'ensure Colima uses network.address=true and is running\n' >&2
+	printf 'stop Colima and rerun make bootstrap from an interactive terminal to apply the bridged network\n' >&2
 	exit 1
 	;;
 esac

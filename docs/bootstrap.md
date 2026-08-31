@@ -27,7 +27,8 @@ make bootstrap
 The target invokes `host/start-colima.sh` through the repository tool wrapper on
 the Mac mini. The wrapper prefers Nix and falls back to Homebrew. The script
 installs the committed Colima profile configuration, starts Colima when needed,
-and waits for the k3s API.
+and waits for the k3s API. The first bridged-network start may request the Mac
+mini user's `sudo` password; `make bootstrap` allocates a terminal for it.
 
 If the host is not reachable, check the SSH alias first:
 

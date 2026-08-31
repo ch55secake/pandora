@@ -26,6 +26,7 @@ esac
 
 require_command colima
 require_command kubectl
+require_command jq
 
 if [[ ! -f "$CONFIG_SOURCE" ]]; then
 	printf 'Colima configuration not found: %s\n' "$CONFIG_SOURCE" >&2
@@ -40,6 +41,16 @@ if [[ ! -f "$CONFIG_TARGET" ]] || ! cmp -s "$CONFIG_SOURCE" "$CONFIG_TARGET"; th
 fi
 
 colima start --profile "$PROFILE"
+
+lan_address="$(colima list --profile "$PROFILE" --json | jq -r '.address // empty')"
+case "$lan_address" in
+*[!0-9.]* | '')
+	printf 'Colima profile %s has no reachable LAN address\n' "$PROFILE" >&2
+	printf 'check bridged network permissions and rerun make bootstrap\n' >&2
+	exit 1
+	;;
+esac
+printf 'Colima LAN address: %s\n' "$lan_address"
 
 printf 'waiting for the k3s API on Colima profile %s\n' "$PROFILE"
 for attempt in {1..60}; do
