@@ -49,5 +49,5 @@ ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima status'
 ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima list'
 ```
 
-If the API is unavailable from the laptop, confirm that the tunnel is running
-and that the generated kubeconfig points to `https://127.0.0.1:6443`.
+If the API is unavailable from the laptop, confirm that Colima is running and
+that the generated kubeconfig points to the VM's LAN address on port `6443`.

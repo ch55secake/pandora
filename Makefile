@@ -7,13 +7,10 @@ KUBECONFIG ?= $(HOME)/.kube/mac-mini-k3s.yaml
 TOOLS = ./scripts/with-tools.sh
 KUBECONFIG_ENV = KUBECONFIG="$(KUBECONFIG)"
 
-.PHONY: bootstrap tunnel kubeconfig tf-init plan apply verify
+.PHONY: bootstrap kubeconfig tf-init plan apply verify
 
 bootstrap:
 	ssh "$(REMOTE_HOST)" 'cd $(REMOTE_REPO) && ./scripts/with-tools.sh ./host/start-colima.sh'
-
-tunnel:
-	$(TOOLS) env REMOTE_HOST="$(REMOTE_HOST)" ./scripts/tunnel.sh
 
 kubeconfig:
 	$(TOOLS) env $(KUBECONFIG_ENV) REMOTE_HOST="$(REMOTE_HOST)" REMOTE_REPO="$(REMOTE_REPO)" ./scripts/kubeconfig.sh
