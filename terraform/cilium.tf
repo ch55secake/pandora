@@ -14,6 +14,11 @@ resource "helm_release" "cilium" {
   values = [yamlencode({
     kubeProxyReplacement = false
 
+    prometheus = {
+      enabled        = true
+      metricsService = true
+    }
+
     ipam = {
       mode = "cluster-pool"
 
@@ -25,10 +30,35 @@ resource "helm_release" "cilium" {
 
     operator = {
       replicas = 1
+
+      prometheus = {
+        enabled        = true
+        metricsService = true
+      }
+
+      dashboards = {
+        enabled = true
+      }
     }
 
     hubble = {
       enabled = true
+
+      metrics = {
+        enabled = [
+          "dns",
+          "drop",
+          "tcp",
+          "flow",
+          "icmp",
+          "http",
+          "port-distribution",
+        ]
+
+        dashboards = {
+          enabled = true
+        }
+      }
 
       relay = {
         enabled = true
@@ -36,7 +66,16 @@ resource "helm_release" "cilium" {
 
       ui = {
         enabled = true
+
+        service = {
+          type     = "NodePort"
+          nodePort = 31235
+        }
       }
+    }
+
+    dashboards = {
+      enabled = true
     }
   })]
 }
