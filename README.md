@@ -64,8 +64,11 @@ The generated kubeconfig is never merged into the default kubeconfig.
 Keep port `6443` restricted to the trusted LAN; do not expose it through the
 router or firewall to the internet.
 
-The optional Cilium ingress exposes the monitoring services on port `80`.
-Create these individual records in the router's LAN DNS configuration:
+The Hubble UI is also available directly on the VM LAN address at
+`http://<colima-lan-address>:31235` through its fixed NodePort.
+
+Cilium ingress exposes the monitoring services on port `80`. Create these
+individual records in the router's LAN DNS configuration:
 
 ```text
 grafana.pandora     -> <colima-lan-address>

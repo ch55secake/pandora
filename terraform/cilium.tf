@@ -90,6 +90,11 @@ resource "helm_release" "cilium" {
 
       ui = {
         enabled = true
+
+        service = {
+          type     = "NodePort"
+          nodePort = 31235
+        }
       }
     }
 
