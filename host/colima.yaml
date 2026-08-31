@@ -6,7 +6,7 @@ runtime: containerd
 network:
   address: true
   mode: bridged
-  interface: en0
+  interface: en1
 
 kubernetes:
   enabled: true
