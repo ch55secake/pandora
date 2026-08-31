@@ -12,7 +12,31 @@ resource "helm_release" "cilium" {
   wait             = true
 
   values = [yamlencode({
-    kubeProxyReplacement = false
+    kubeProxyReplacement = true
+
+    envoy = {
+      securityContext = {
+        capabilities = {
+          envoy = [
+            "NET_ADMIN",
+            "SYS_ADMIN",
+            "NET_BIND_SERVICE",
+          ]
+          keepCapNetBindService = true
+        }
+      }
+    }
+
+    ingressController = {
+      enabled          = true
+      enforceHttps     = false
+      loadbalancerMode = "shared"
+
+      hostNetwork = {
+        enabled            = true
+        sharedListenerPort = 80
+      }
+    }
 
     prometheus = {
       enabled        = true

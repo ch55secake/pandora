@@ -64,6 +64,22 @@ The generated kubeconfig is never merged into the default kubeconfig.
 Keep port `6443` restricted to the trusted LAN; do not expose it through the
 router or firewall to the internet.
 
+The optional Cilium ingress exposes the monitoring services on port `80`.
+Create these individual records in the router's LAN DNS configuration:
+
+```text
+grafana.pandora     -> <colima-lan-address>
+prometheus.pandora  -> <colima-lan-address>
+hubble.pandora      -> <colima-lan-address>
+```
+
+After ingress is enabled, use `http://grafana.pandora`,
+`http://prometheus.pandora`, and `http://hubble.pandora`. Keep port `80`
+restricted to the trusted LAN; Prometheus and Hubble do not provide
+authentication by default. Enabling ingress also enables Cilium's kube-proxy
+replacement; stop and start an existing Colima profile before rerunning
+`make bootstrap` so the new k3s argument takes effect.
+
 ### 3. Run Terraform
 
 With `KUBECONFIG` set:

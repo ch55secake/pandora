@@ -15,4 +15,5 @@ kubernetes:
   k3sArgs:
     - --flannel-backend=none
     - --disable-network-policy
+    - --disable-kube-proxy
     - --disable=traefik
