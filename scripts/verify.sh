@@ -57,4 +57,4 @@ kubectl -n "$NAMESPACE" wait --for=jsonpath='{.status.phase}'=Succeeded \
 kubectl -n "$NAMESPACE" logs "$test_pod"
 
 printf '%s\n' '== Cilium connectivity test =='
-cilium connectivity test --wait
+cilium connectivity test
