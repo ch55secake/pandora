@@ -42,6 +42,11 @@ fi
 
 colima start --profile "$PROFILE"
 
+# Cilium's unprivileged init containers need to write into this directory.
+printf 'preparing the CNI binary directory\n'
+colima ssh --profile "$PROFILE" -- sudo chown root:root /opt/cni/bin
+colima ssh --profile "$PROFILE" -- sudo chmod 755 /opt/cni/bin
+
 lan_address="$(colima list --profile "$PROFILE" --json | jq -r '.address // empty')"
 case "$lan_address" in
 *[!0-9.]* | '')
