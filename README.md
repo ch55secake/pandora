@@ -43,6 +43,8 @@ make bootstrap
 This starts the configured Colima profile and verifies that k3s is running.
 It does not run Terraform. If Nix is unavailable on the Mac mini, the target
 uses Homebrew and the tracked `Brewfile` automatically.
+The first bridged-network start may request the Mac mini user's `sudo` password,
+so run `make bootstrap` from an interactive terminal.
 
 ### 2. Configure LAN access
 
