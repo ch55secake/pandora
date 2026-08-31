@@ -64,6 +64,9 @@ The generated kubeconfig is never merged into the default kubeconfig.
 Keep port `6443` restricted to the trusted LAN; do not expose it through the
 router or firewall to the internet.
 
+The Hubble UI is also available directly on the VM LAN address at
+`http://<colima-lan-address>:31235` through its fixed NodePort.
+
 ### 3. Run Terraform
 
 With `KUBECONFIG` set:
