@@ -45,6 +45,8 @@ It does not run Terraform. If Nix is unavailable on the Mac mini, the target
 uses Homebrew and the tracked `Brewfile` automatically.
 The first bridged-network start may request the Mac mini user's `sudo` password,
 so run `make bootstrap` from an interactive terminal.
+The committed profile targets the Mac mini's active Wi-Fi interface, `en1`;
+change `network.interface` for a different host interface.
 
 ### 2. Configure LAN access
 

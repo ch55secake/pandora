@@ -29,6 +29,8 @@ the Mac mini. The wrapper prefers Nix and falls back to Homebrew. The script
 installs the committed Colima profile configuration, starts Colima when needed,
 and waits for the k3s API. The first bridged-network start may request the Mac
 mini user's `sudo` password; `make bootstrap` allocates a terminal for it.
+The committed profile uses the Mac mini's active Wi-Fi interface, `en1`; change
+`network.interface` in `host/colima.yaml` if the host uses another interface.
 
 If the host is not reachable, check the SSH alias first:
 
