@@ -51,3 +51,17 @@ ssh mac-mini 'cd ~/Projects/pandora && ./scripts/with-tools.sh colima list'
 
 If the API is unavailable from the laptop, confirm that Colima is running and
 that the generated kubeconfig points to the VM's LAN address on port `6443`.
+
+## Full teardown
+
+Run the teardown from the laptop while Colima is running and reachable on the
+LAN:
+
+```sh
+make teardown
+```
+
+After confirmation, the target destroys Terraform-managed resources, deletes
+the remote Colima profile with its data, and removes the generated local
+kubeconfig. The teardown aborts before deleting Colima if Terraform
+destruction fails.
