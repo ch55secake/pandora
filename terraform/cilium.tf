@@ -1,3 +1,16 @@
+data "kubernetes_nodes" "cluster" {}
+
+locals {
+  # kube-proxy is disabled, so Cilium's init containers must use the node's
+  # reachable API address instead of the Kubernetes service IP.
+  cilium_k8s_service_host = one(flatten([
+    for node in data.kubernetes_nodes.cluster.nodes : [
+      for address in node.status[0].addresses : address.address
+      if address.type == "InternalIP" && !strcontains(address.address, ":")
+    ]
+  ]))
+}
+
 resource "helm_release" "cilium" {
   name       = "cilium"
   repository = "https://helm.cilium.io/"
@@ -13,6 +26,8 @@ resource "helm_release" "cilium" {
 
   values = [yamlencode({
     kubeProxyReplacement = true
+    k8sServiceHost       = local.cilium_k8s_service_host
+    k8sServicePort       = 6443
 
     envoy = {
       securityContext = {

@@ -96,8 +96,10 @@ make apply
 
 Terraform installs Cilium, enables Hubble metrics and dashboards, deploys the
 internal Prometheus and Grafana services, and creates the namespaces used by
-the monitoring and test workloads. Keep the Grafana password out of Git; the
-Terraform state remains local and is excluded from Git.
+the monitoring and test workloads. With kube-proxy disabled, Terraform also
+passes Cilium the node's LAN `InternalIP` for API bootstrap. Keep the Grafana
+password out of Git; the Terraform state remains local and is excluded from
+Git.
 
 ### 4. Verify the cluster
 
