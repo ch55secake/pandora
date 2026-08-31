@@ -69,13 +69,16 @@ router or firewall to the internet.
 With `KUBECONFIG` set:
 
 ```sh
+export TF_VAR_grafana_admin_password='use-a-password-manager-value'
 make tf-init
 make plan
 make apply
 ```
 
-Terraform installs Cilium, enables the initial Hubble components, and creates
-the namespace used by the test workload.
+Terraform installs Cilium, enables Hubble metrics and dashboards, deploys the
+internal Prometheus and Grafana services, and creates the namespaces used by
+the monitoring and test workloads. Keep the Grafana password out of Git; the
+Terraform state remains local and is excluded from Git.
 
 ### 4. Verify the cluster
 
