@@ -98,8 +98,8 @@ terraform -chdir="$TERRAFORM_DIR" destroy \
 	-var="kubeconfig_path=$KUBECONFIG_PATH"
 
 case "$REMOTE_REPO" in
-"~/"*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
-"\$HOME/"*) remote_repo_arg="$REMOTE_REPO" ;;
+\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
+\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
 *) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
 esac
 printf -v profile_arg '%q' "$PROFILE"
