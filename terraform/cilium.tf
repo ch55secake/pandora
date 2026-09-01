@@ -47,11 +47,10 @@ resource "helm_release" "cilium" {
       enforceHttps     = true
       loadbalancerMode = "shared"
 
-      hostNetwork = {
-        enabled            = true
-        sharedListenerPort = 80
-        httpPort           = 80
-        httpsPort          = 443
+      service = {
+        type             = "NodePort"
+        insecureNodePort = 80
+        secureNodePort   = 443
       }
     }
 

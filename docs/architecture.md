@@ -25,8 +25,8 @@ LAN address; SSH is used only for bootstrap and kubeconfig discovery.
 - The Colima VM uses bridged networking and receives a LAN-reachable IPv4
   address.
 - The Kubernetes API is available at the VM's LAN address on port `6443`.
-- Cilium Ingress publishes the selected HTTP services at the VM's LAN address
-  on ports `80` and `443`.
+- Cilium Ingress publishes the selected HTTP services through fixed NodePorts at
+  the VM's LAN address on ports `80` and `443`.
 - Network controls must keep ports `80`, `443`, and `6443` on the trusted LAN
   and off the WAN.
 - Cilium provides the kube-proxy replacement required by its ingress

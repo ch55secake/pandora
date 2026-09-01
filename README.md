@@ -67,8 +67,9 @@ router or firewall to the internet.
 The Hubble UI is also available directly on the VM LAN address at
 `http://<colima-lan-address>:31235` through its fixed NodePort.
 
-Cilium ingress exposes the monitoring services on ports `80` and `443`. Create
-these individual records in the router's LAN DNS configuration:
+Cilium ingress exposes the monitoring services through fixed NodePorts on ports
+`80` and `443`. Create these individual records in the router's LAN DNS
+configuration:
 
 ```text
 grafana.pandora     -> <colima-lan-address>
