@@ -67,8 +67,8 @@ router or firewall to the internet.
 The Hubble UI is also available directly on the VM LAN address at
 `http://<colima-lan-address>:31235` through its fixed NodePort.
 
-Cilium ingress exposes the monitoring services on port `80`. Create these
-individual records in the router's LAN DNS configuration:
+Cilium ingress exposes the monitoring services on ports `80` and `443`. Create
+these individual records in the router's LAN DNS configuration:
 
 ```text
 grafana.pandora     -> <colima-lan-address>
@@ -76,12 +76,25 @@ prometheus.pandora  -> <colima-lan-address>
 hubble.pandora      -> <colima-lan-address>
 ```
 
-After ingress is enabled, use `http://grafana.pandora`,
-`http://prometheus.pandora`, and `http://hubble.pandora`. Keep port `80`
-restricted to the trusted LAN; Prometheus and Hubble do not provide
+After ingress is enabled, use `https://grafana.pandora`,
+`https://prometheus.pandora`, and `https://hubble.pandora`. Keep ports `80` and
+`443` restricted to the trusted LAN; Prometheus and Hubble do not provide
 authentication by default. Enabling ingress also enables Cilium's kube-proxy
 replacement; stop and start an existing Colima profile before rerunning
 `make bootstrap` so the new k3s argument takes effect.
+
+The certificates are issued by a private cert-manager CA. Export the CA
+certificate and trust it on the laptop to remove browser warnings:
+
+```sh
+kubectl -n cert-manager get secret pandora-ca \
+  -o jsonpath='{.data.tls\.crt}' | base64 --decode > pandora-ca.crt
+security add-trusted-cert -d -r trustRoot \
+  -k "$HOME/Library/Keychains/login.keychain-db" pandora-ca.crt
+```
+
+The generated `pandora-ca.crt` is ignored by Git. Re-run the trust command if
+the CA is recreated after a full cluster teardown.
 
 ### 3. Run Terraform
 

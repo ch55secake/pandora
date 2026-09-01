@@ -10,6 +10,12 @@ variable "cilium_version" {
   default     = "1.19.7"
 }
 
+variable "cert_manager_version" {
+  description = "cert-manager Helm chart version."
+  type        = string
+  default     = "v1.21.1"
+}
+
 variable "prometheus_chart_version" {
   description = "Prometheus Helm chart version."
   type        = string

@@ -1,0 +1,6 @@
+---
+apiVersion: v2
+name: pandora-tls
+description: Private CA and LAN certificates for Pandora services
+type: application
+version: 0.1.0

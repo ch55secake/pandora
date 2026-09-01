@@ -26,9 +26,9 @@ LAN address; SSH is used only for bootstrap and kubeconfig discovery.
   address.
 - The Kubernetes API is available at the VM's LAN address on port `6443`.
 - Cilium Ingress publishes the selected HTTP services at the VM's LAN address
-  on port `80`.
-- Network controls must keep ports `80` and `6443` on the trusted LAN and off
-  the WAN.
+  on ports `80` and `443`.
+- Network controls must keep ports `80`, `443`, and `6443` on the trusted LAN
+  and off the WAN.
 - Cilium provides the kube-proxy replacement required by its ingress
   controller; k3s' bundled kube-proxy is disabled.
 - Cilium replaces the disabled Flannel CNI.
@@ -36,5 +36,6 @@ LAN address; SSH is used only for bootstrap and kubeconfig discovery.
 
 ## Initial boundaries
 
-The first milestone intentionally excludes certificates, GitOps, storage, and
-application services beyond the test workload.
+The first milestone intentionally excludes GitOps, storage, and application
+services beyond the test workload. TLS uses a private cert-manager CA for the
+LAN-only service names.

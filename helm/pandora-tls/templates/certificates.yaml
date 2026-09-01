@@ -1,0 +1,82 @@
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: pandora-selfsigned
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: pandora-ca
+  namespace: cert-manager
+spec:
+  isCA: true
+  commonName: Pandora Local CA
+  secretName: pandora-ca
+  duration: 8760h
+  renewBefore: 720h
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+  issuerRef:
+    name: pandora-selfsigned
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: pandora-ca
+spec:
+  ca:
+    secretName: pandora-ca
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: grafana-tls
+  namespace: monitoring
+spec:
+  secretName: grafana-tls
+  dnsNames:
+    - grafana.pandora
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: pandora-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: prometheus-tls
+  namespace: monitoring
+spec:
+  secretName: prometheus-tls
+  dnsNames:
+    - prometheus.pandora
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: pandora-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: hubble-tls
+  namespace: kube-system
+spec:
+  secretName: hubble-tls
+  dnsNames:
+    - hubble.pandora
+  duration: 2160h
+  renewBefore: 360h
+  issuerRef:
+    name: pandora-ca
+    kind: ClusterIssuer
+    group: cert-manager.io
