@@ -48,6 +48,14 @@
           echo "KUBECONFIG=$KUBECONFIG"
         '';
       };
+
+      ci = pkgs.mkShellNoCC {
+        packages = with pkgs; [
+          kubeconform
+          shfmt
+          yamllint
+        ];
+      };
     });
 
     formatter = forEachSystem ({pkgs}: pkgs.alejandra);
