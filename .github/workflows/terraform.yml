@@ -2,8 +2,12 @@ name: ci
 
 on:
   pull_request:
-    branches:
-      - main
+    paths:
+      - ".github/workflows/terraform.yml"
+      - "flake.lock"
+      - "flake.nix"
+      - "terraform/.terraform.lock.hcl"
+      - "terraform/**/*.tf"
   workflow_dispatch:
 
 permissions:
