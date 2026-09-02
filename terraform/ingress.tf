@@ -7,6 +7,11 @@ resource "kubernetes_ingress_v1" "grafana" {
   spec {
     ingress_class_name = "cilium"
 
+    tls {
+      hosts       = ["grafana.pandora"]
+      secret_name = "grafana-tls"
+    }
+
     rule {
       host = "grafana.pandora"
 
@@ -29,7 +34,7 @@ resource "kubernetes_ingress_v1" "grafana" {
     }
   }
 
-  depends_on = [helm_release.cilium, helm_release.grafana]
+  depends_on = [helm_release.cilium, helm_release.grafana, helm_release.pandora_tls]
 }
 
 resource "kubernetes_ingress_v1" "prometheus" {
@@ -40,6 +45,11 @@ resource "kubernetes_ingress_v1" "prometheus" {
 
   spec {
     ingress_class_name = "cilium"
+
+    tls {
+      hosts       = ["prometheus.pandora"]
+      secret_name = "prometheus-tls"
+    }
 
     rule {
       host = "prometheus.pandora"
@@ -63,7 +73,7 @@ resource "kubernetes_ingress_v1" "prometheus" {
     }
   }
 
-  depends_on = [helm_release.cilium, helm_release.prometheus]
+  depends_on = [helm_release.cilium, helm_release.prometheus, helm_release.pandora_tls]
 }
 
 resource "kubernetes_ingress_v1" "hubble" {
@@ -74,6 +84,11 @@ resource "kubernetes_ingress_v1" "hubble" {
 
   spec {
     ingress_class_name = "cilium"
+
+    tls {
+      hosts       = ["hubble.pandora"]
+      secret_name = "hubble-tls"
+    }
 
     rule {
       host = "hubble.pandora"
@@ -97,5 +112,5 @@ resource "kubernetes_ingress_v1" "hubble" {
     }
   }
 
-  depends_on = [helm_release.cilium]
+  depends_on = [helm_release.cilium, helm_release.pandora_tls]
 }

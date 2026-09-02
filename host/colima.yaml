@@ -17,3 +17,4 @@ kubernetes:
     - --disable-network-policy
     - --disable-kube-proxy
     - --disable=traefik
+    - --service-node-port-range=80-32767

@@ -66,7 +66,7 @@ resource "helm_release" "grafana" {
     "grafana.ini" = {
       server = {
         domain   = "grafana.pandora"
-        root_url = "http://grafana.pandora/"
+        root_url = "https://grafana.pandora/"
       }
     }
 

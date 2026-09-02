@@ -44,12 +44,13 @@ resource "helm_release" "cilium" {
 
     ingressController = {
       enabled          = true
-      enforceHttps     = false
+      enforceHttps     = true
       loadbalancerMode = "shared"
 
-      hostNetwork = {
-        enabled            = true
-        sharedListenerPort = 80
+      service = {
+        type             = "NodePort"
+        insecureNodePort = 80
+        secureNodePort   = 443
       }
     }
 
