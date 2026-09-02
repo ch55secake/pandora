@@ -115,7 +115,28 @@ passes Cilium the node's LAN `InternalIP` for API bootstrap. Keep the Grafana
 password out of Git; the Terraform state remains local and is excluded from
 Git.
 
-### 4. Verify the cluster
+### 4. Deploy Terraform from GitHub
+
+The repository includes a deployment workflow for a self-hosted GitHub Actions
+runner on the Mac mini. The runner must use the same macOS user that owns
+Colima, have the custom `pandora` runner label, and keep Colima running. Install
+the runner from the repository's GitHub Settings under Actions > Runners,
+select macOS/ARM64, and install it as a service for that user. Add a repository
+secret named `PANDORA_GRAFANA_ADMIN_PASSWORD` before enabling the workflow.
+
+Before the first automated deployment, migrate the current local state from the
+laptop to the Mac mini while no Terraform command is running:
+
+```sh
+make migrate-state
+```
+
+The state is stored at `~/.local/state/pandora/terraform.tfstate` on the Mac
+mini. Merges to `main` that change Terraform configuration run a serialized
+plan and apply on that runner. The workflow can also be retried with the
+`workflow_dispatch` trigger. It fails rather than starting from empty state.
+
+### 5. Verify the cluster
 
 Run the complete base-cluster verification:
 
@@ -124,7 +145,11 @@ make verify
 ```
 
 This checks the node, system pods, Cilium, Hubble, workload readiness, service
-routing, DNS, and the Cilium connectivity test.
+routing, DNS, and the single-node Cilium connectivity test.
+
+Automated Terraform deployments use the same checks in smoke mode and skip the
+full connectivity suite to keep deployments short. Run `make verify` when the
+comprehensive Cilium policy and connectivity test is needed.
 
 After the baseline is healthy, apply the optional policy experiment:
 
@@ -137,7 +162,7 @@ The policy allows HTTP traffic from labeled test clients and denies other
 ingress to the test workload. Remove it with `kubectl delete -f` when the
 experiment is complete.
 
-### 5. Tear down Pandora
+### 6. Tear down Pandora
 
 The full teardown requires Colima to remain reachable on the LAN while Terraform
 destroys the Kubernetes resources:
@@ -173,5 +198,5 @@ See [`docs/architecture.md`](docs/architecture.md) for the deployment model
 and [`docs/bootstrap.md`](docs/bootstrap.md) for host setup and recovery
 details.
 
-The next phases are kube-proxy replacement and eBPF experiments, LAN ingress,
-persistent storage and backups, GitOps, and monitoring.
+The next phases are eBPF experiments, TLS, Terraform deployment automation, and
+monitoring.

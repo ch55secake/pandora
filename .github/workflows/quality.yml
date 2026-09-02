@@ -64,14 +64,11 @@ jobs:
       - name: Enable Nix cache
         uses: DeterminateSystems/magic-nix-cache-action@main
 
-      - name: Check YAML style
-        run: nix develop --command bash -c 'git ls-files -z "*.yaml" "*.yml" | xargs -0 yamllint'
-
-      - name: Validate Kubernetes manifests
+      - name: Validate manifests and shell formatting
         run: |
-          nix develop --command bash -c \
-            'git ls-files -z "kubernetes/**/*.yaml" | xargs -0 kubeconform -strict \
-              -ignore-missing-schemas -summary'
-
-      - name: Check shell formatting
-        run: nix develop --command bash -c 'git ls-files -z "*.sh" | xargs -0 shfmt -d -ci'
+          nix develop .#ci --command bash -euo pipefail -c '
+            git ls-files -z "*.yaml" "*.yml" | xargs -0 -r yamllint
+            git ls-files -z "kubernetes/**/*.yaml" | xargs -0 -r kubeconform \
+              -strict -ignore-missing-schemas -summary
+            git ls-files -z "*.sh" | xargs -0 -r shfmt -d -ci
+          '

@@ -3,9 +3,19 @@
 set -euo pipefail
 
 readonly NAMESPACE="${TEST_NAMESPACE:-pandora-test}"
+readonly VERIFY_MODE="${VERIFY_MODE:-full}"
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 readonly SCRIPT_DIR
 readonly WORKLOAD_DIR="$SCRIPT_DIR/../kubernetes/test-app"
+
+case "$VERIFY_MODE" in
+	full | smoke)
+		;;
+	*)
+		printf 'invalid VERIFY_MODE: %s (expected full or smoke)\n' "$VERIFY_MODE" >&2
+		exit 2
+		;;
+esac
 
 require_command() {
 	if ! command -v "$1" >/dev/null 2>&1; then
@@ -56,5 +66,9 @@ kubectl -n "$NAMESPACE" wait --for=jsonpath='{.status.phase}'=Succeeded \
 	"pod/$test_pod" --timeout=180s
 kubectl -n "$NAMESPACE" logs "$test_pod"
 
-printf '%s\n' '== Cilium connectivity test =='
-cilium connectivity test
+if [[ "$VERIFY_MODE" == "full" ]]; then
+	printf '%s\n' '== Cilium connectivity test (single node) =='
+	cilium connectivity test --single-node
+else
+	printf '%s\n' '== Cilium connectivity test (smoke mode: skipped) =='
+fi

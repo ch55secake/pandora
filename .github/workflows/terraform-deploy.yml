@@ -1,0 +1,88 @@
+name: terraform-deploy
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/terraform-deploy.yml"
+      - "terraform/.terraform.lock.hcl"
+      - "terraform/**/*.tf"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pandora-terraform
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: apply-terraform
+    if: github.ref == 'refs/heads/main'
+    runs-on: [self-hosted, macOS, ARM64, pandora]
+    timeout-minutes: 30
+
+    env:
+      TF_IN_AUTOMATION: "true"
+      TF_VAR_grafana_admin_password: >-
+        ${{ secrets.PANDORA_GRAFANA_ADMIN_PASSWORD }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set runner kubeconfig path
+        run: |
+          kubeconfig_path="$RUNNER_TEMP/pandora-kubeconfig"
+          {
+            printf 'KUBECONFIG=%s\n' "$kubeconfig_path"
+            printf 'TF_VAR_kubeconfig_path=%s\n' "$kubeconfig_path"
+          } >>"$GITHUB_ENV"
+
+      - name: Check Colima
+        run: ./scripts/with-tools.sh colima status --profile default
+
+      - name: Prepare runner kubeconfig
+        run: ./scripts/with-tools.sh ./scripts/runner-kubeconfig.sh
+
+      - name: Check deployment prerequisites
+        run: |
+          state_path="$HOME/.local/state/pandora/terraform.tfstate"
+          if [[ ! -s "$state_path" ]]; then
+            printf 'Terraform state is missing: %s\n' "$state_path" >&2
+            printf 'run make migrate-state from the laptop first\n' >&2
+            exit 1
+          fi
+          if [[ -z "${TF_VAR_grafana_admin_password:-}" ]]; then
+            printf '%s\n' \
+              'GitHub secret PANDORA_GRAFANA_ADMIN_PASSWORD is missing' >&2
+            exit 1
+          fi
+          chmod 700 "$(dirname -- "$state_path")"
+          chmod 600 "$state_path"
+
+      - name: Initialize Terraform
+        run: |
+          state_path="$HOME/.local/state/pandora/terraform.tfstate"
+          ./scripts/with-tools.sh terraform -chdir=terraform init \
+            -reconfigure -input=false -lockfile=readonly \
+            "-backend-config=path=$state_path"
+
+      - name: Plan Terraform
+        run: |
+          plan_path="$HOME/.local/state/pandora/terraform.tfplan"
+          ./scripts/with-tools.sh terraform -chdir=terraform plan \
+            -input=false -lock-timeout=5m -out="$plan_path"
+
+      - name: Apply Terraform
+        run: |
+          plan_path="$HOME/.local/state/pandora/terraform.tfplan"
+          ./scripts/with-tools.sh terraform -chdir=terraform apply \
+            -input=false -auto-approve "$plan_path"
+
+      - name: Verify cluster
+        env:
+          VERIFY_MODE: smoke
+        run: ./scripts/with-tools.sh ./scripts/verify.sh
