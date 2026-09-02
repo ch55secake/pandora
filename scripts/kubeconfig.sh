@@ -10,17 +10,17 @@ readonly OUTPUT="${KUBECONFIG:-$HOME/.kube/mac-mini-k3s.yaml}"
 readonly CONTEXT="mac-mini-k3s"
 
 case "$PROFILE" in
-*[!A-Za-z0-9._-]* | '')
-	printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
-	exit 1
-	;;
+	*[!A-Za-z0-9._-]* | '')
+		printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
+		exit 1
+		;;
 esac
 
 case "$K8S_PORT" in
-*[!0-9]* | '')
-	printf 'K8S_PORT must be numeric: %s\n' "$K8S_PORT" >&2
-	exit 1
-	;;
+	*[!0-9]* | '')
+		printf 'K8S_PORT must be numeric: %s\n' "$K8S_PORT" >&2
+		exit 1
+		;;
 esac
 
 command -v ssh >/dev/null 2>&1 || {
@@ -42,9 +42,9 @@ temp_file="$(mktemp "${TMPDIR:-/tmp}/pandora-kubeconfig.XXXXXX")"
 trap 'rm -f "$temp_file"' EXIT
 
 case "$REMOTE_REPO" in
-\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
-\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
-*) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
+	\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
+	\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
+	*) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
 esac
 printf -v profile_arg '%q' "$PROFILE"
 
@@ -54,11 +54,11 @@ remote_command="cd $remote_repo_arg && ./scripts/with-tools.sh colima list --pro
 colima_listing="$(ssh -o IgnoreUnknown=UseKeychain "$REMOTE_HOST" "$remote_command")"
 server_address="$(printf '%s\n' "$colima_listing" | jq -Rr 'fromjson? | .address // empty')"
 case "$server_address" in
-*[!0-9.]* | '')
-	printf 'could not determine a LAN address for Colima profile %s\n' "$PROFILE" >&2
-	printf 'stop Colima and rerun make bootstrap from an interactive terminal to apply the bridged network\n' >&2
-	exit 1
-	;;
+	*[!0-9.]* | '')
+		printf 'could not determine a LAN address for Colima profile %s\n' "$PROFILE" >&2
+		printf 'stop Colima and rerun make bootstrap from an interactive terminal to apply the bridged network\n' >&2
+		exit 1
+		;;
 esac
 
 ssh_command="cd $remote_repo_arg && ./scripts/with-tools.sh colima ssh --profile $profile_arg -- sudo cat /etc/rancher/k3s/k3s.yaml"
