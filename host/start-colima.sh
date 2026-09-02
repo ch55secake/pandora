@@ -18,10 +18,10 @@ require_command() {
 }
 
 case "$PROFILE" in
-*[!A-Za-z0-9._-]* | '')
-	printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
-	exit 1
-	;;
+	*[!A-Za-z0-9._-]* | '')
+		printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
+		exit 1
+		;;
 esac
 
 require_command colima
@@ -49,11 +49,11 @@ colima ssh --profile "$PROFILE" -- sudo chmod 755 /opt/cni/bin
 
 lan_address="$(colima list --profile "$PROFILE" --json | jq -r '.address // empty')"
 case "$lan_address" in
-*[!0-9.]* | '')
-	printf 'Colima profile %s has no reachable LAN address\n' "$PROFILE" >&2
-	printf 'check bridged network permissions and rerun make bootstrap\n' >&2
-	exit 1
-	;;
+	*[!0-9.]* | '')
+		printf 'Colima profile %s has no reachable LAN address\n' "$PROFILE" >&2
+		printf 'check bridged network permissions and rerun make bootstrap\n' >&2
+		exit 1
+		;;
 esac
 printf 'Colima LAN address: %s\n' "$lan_address"
 

@@ -4,8 +4,12 @@ on:
   pull_request:
     paths:
       - ".github/workflows/quality.yml"
+      - ".yamllint"
+      - "Brewfile"
       - "flake.lock"
       - "flake.nix"
+      - "**/*.yaml"
+      - "**/*.yml"
       - "**/*.sh"
   workflow_dispatch:
 
@@ -45,3 +49,29 @@ jobs:
 
       - name: Check flake
         run: nix flake check --no-update-lock-file
+
+  manifests:
+    name: manifests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@main
+
+      - name: Enable Nix cache
+        uses: DeterminateSystems/magic-nix-cache-action@main
+
+      - name: Check YAML style
+        run: nix develop --command bash -c 'git ls-files -z "*.yaml" "*.yml" | xargs -0 yamllint'
+
+      - name: Validate Kubernetes manifests
+        run: |
+          nix develop --command bash -c \
+            'git ls-files -z "kubernetes/**/*.yaml" | xargs -0 kubeconform -strict \
+              -ignore-missing-schemas -summary'
+
+      - name: Check shell formatting
+        run: nix develop --command bash -c 'git ls-files -z "*.sh" | xargs -0 shfmt -d -ci'

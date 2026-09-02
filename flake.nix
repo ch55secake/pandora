@@ -31,6 +31,7 @@
           cilium-cli
           colima
           hubble
+          kubeconform
           kubernetes-helm
           jq
           kubectl
@@ -38,6 +39,7 @@
           shellcheck
           shfmt
           terraform
+          yamllint
         ];
 
         shellHook = ''

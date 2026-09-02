@@ -33,27 +33,27 @@ require_command() {
 confirm=false
 while [[ "$#" -gt 0 ]]; do
 	case "$1" in
-	--yes | -y)
-		confirm=true
-		;;
-	--help | -h)
-		usage
-		exit 0
-		;;
-	*)
-		printf 'unknown option: %s\n' "$1" >&2
-		usage >&2
-		exit 2
-		;;
+		--yes | -y)
+			confirm=true
+			;;
+		--help | -h)
+			usage
+			exit 0
+			;;
+		*)
+			printf 'unknown option: %s\n' "$1" >&2
+			usage >&2
+			exit 2
+			;;
 	esac
 	shift
 done
 
 case "$PROFILE" in
-*[!A-Za-z0-9._-]* | '')
-	printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
-	exit 1
-	;;
+	*[!A-Za-z0-9._-]* | '')
+		printf 'invalid COLIMA_PROFILE: %s\n' "$PROFILE" >&2
+		exit 1
+		;;
 esac
 
 require_command terraform
@@ -98,9 +98,9 @@ terraform -chdir="$TERRAFORM_DIR" destroy \
 	-var="kubeconfig_path=$KUBECONFIG_PATH"
 
 case "$REMOTE_REPO" in
-\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
-\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
-*) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
+	\~/*) remote_repo_arg="\$HOME/${REMOTE_REPO#\~/}" ;;
+	\$HOME/*) remote_repo_arg="$REMOTE_REPO" ;;
+	*) printf -v remote_repo_arg '%q' "$REMOTE_REPO" ;;
 esac
 printf -v profile_arg '%q' "$PROFILE"
 remote_command="cd $remote_repo_arg && ./scripts/with-tools.sh colima delete --profile $profile_arg --data --force"
