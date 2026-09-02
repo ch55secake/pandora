@@ -83,4 +83,6 @@ jobs:
             -input=false -auto-approve "$plan_path"
 
       - name: Verify cluster
+        env:
+          VERIFY_MODE: smoke
         run: ./scripts/with-tools.sh ./scripts/verify.sh

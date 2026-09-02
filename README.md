@@ -131,7 +131,11 @@ make verify
 ```
 
 This checks the node, system pods, Cilium, Hubble, workload readiness, service
-routing, DNS, and the Cilium connectivity test.
+routing, DNS, and the single-node Cilium connectivity test.
+
+Automated Terraform deployments use the same checks in smoke mode and skip the
+full connectivity suite to keep deployments short. Run `make verify` when the
+comprehensive Cilium policy and connectivity test is needed.
 
 After the baseline is healthy, apply the optional policy experiment:
 
