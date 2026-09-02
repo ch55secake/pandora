@@ -35,8 +35,11 @@ jobs:
 
       - name: Set runner kubeconfig path
         run: |
-          printf 'KUBECONFIG=%s\n' "$RUNNER_TEMP/pandora-kubeconfig" \
-            >>"$GITHUB_ENV"
+          kubeconfig_path="$RUNNER_TEMP/pandora-kubeconfig"
+          {
+            printf 'KUBECONFIG=%s\n' "$kubeconfig_path"
+            printf 'TF_VAR_kubeconfig_path=%s\n' "$kubeconfig_path"
+          } >>"$GITHUB_ENV"
 
       - name: Check Colima
         run: ./scripts/with-tools.sh colima status --profile default
